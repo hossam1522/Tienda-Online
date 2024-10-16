@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda</title>
+    <!-- Enlazamos Bootstrap desde CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar {
+            background-color: #4CAF50;
+        }
+        .navbar .navbar-brand {
+            color: white;
+        }
+        .navbar-nav .nav-link {
+            color: white;
+        }
+        .dropdown-menu {
+            background-color: #4CAF50;
+        }
+        .dropdown-menu .dropdown-item {
+            color: white;
+        }
+        .dropdown-menu .dropdown-item:hover {
+            background-color: #45a049;
+        }
+        .card-title {
+            font-weight: bold;
+        }
+        .btn-custom {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">Store</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-custom" type="submit">Search</button>
+                    </form>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Categories
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Men's Fashion</a>
+                        <a class="dropdown-item" href="#">Women's Fashion</a>
+                        <a class="dropdown-item" href="#">Beauty Products</a>
+                        <a class="dropdown-item" href="#">Watches</a>
+                        <a class="dropdown-item" href="#">Electronics</a>
+                        <a class="dropdown-item" href="#">Grocery</a>
+                        <a class="dropdown-item" href="#">Kids Fashion</a>
+                        <a class="dropdown-item" href="#">Sports</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sección de productos -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Producto 1 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Men's Fashion">
+                    <div class="card-body">
+                        <h5 class="card-title">Men's Fashion</h5>
+                        <a href="#" class="btn btn-custom">View Items</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 2 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Women's Fashion">
+                    <div class="card-body">
+                        <h5 class="card-title">Women's Fashion</h5>
+                        <a href="#" class="btn btn-custom">View Items</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 3 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Beauty Products">
+                    <div class="card-body">
+                        <h5 class="card-title">Beauty Products</h5>
+                        <a href="#" class="btn btn-custom">View Items</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
