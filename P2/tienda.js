@@ -13,7 +13,10 @@ nunjucks.configure('views', {         // directorio 'views' para las plantillas 
 	noCache:    IN == 'development',   // true para desarrollo, sin cache
 	watch:      IN == 'development',   // reinicio con Ctrl-S
 	express: app
-})
+}).addFilter('urlencode', function(str) {
+  return encodeURIComponent(str);
+});
+
 app.set('view engine', 'html')
 
 app.use(express.static('public'))     // directorio public para archivos

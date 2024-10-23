@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category }}</title>
+    <!-- Enlazamos Bootstrap desde CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar {
+            background-color: #4CAF50;
+        }
+        .navbar .navbar-brand {
+            color: white;
+        }
+        .navbar-nav .nav-link {
+            color: white;
+        }
+        .dropdown-menu {
+            background-color: #4CAF50;
+        }
+        .dropdown-menu .dropdown-item {
+            color: white;
+        }
+        .dropdown-menu .dropdown-item:hover {
+            background-color: #45a049;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-weight: bold;
+            flex-grow: 1;
+        }
+        .btn-custom {
+            background-color: #4CAF50;
+            color: white;
+            margin-top: auto;
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+        }
+        .image-container {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+
+</head>
+<body>
+  <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="/">Store</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-custom" type="submit">Search</button>
+                    </form>
+                </li>
+                <!-- Menú desplegable de categorías -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                    Categorías
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% for category in categories %}
+                      <a class="dropdown-item" href="/categorias/{{ category.name | urlencode }}">{{ category.name }}</a>
+                    {% endfor %}
+                  </div>
+                </li>
+
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+  
+  <div class="container mt-4">
+    <h2>Productos en "{{ category }}"</h2>
+    <div class="row">
+      {% for product in products %}
+        <div class="col-md-4">
+          <div class="card">
+            <img src="{{ product.image }}" class="card-img-top" alt="{{ product.title }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ product.title }}</h5>
+              <p class="card-text">{{ product.description }}</p>
+              <p class="card-text"><strong>Precio:</strong> ${{ product.price }}</p>
+              <!-- Puedes agregar un enlace a una página de detalles del producto si lo deseas -->
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <p>No hay productos en esta categoría.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Incluye tus scripts de Bootstrap -->
+</body>
+</html>

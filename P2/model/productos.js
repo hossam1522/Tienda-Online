@@ -1,33 +1,25 @@
 import mongoose from "mongoose";
  
-//const ProductosSchema = new mongoose.Schema({
-//"id": {
-//    "type": "Number",
-//    "unique": true
-//  },
-//  // ...
-//})
-
 const ProductosSchema = new mongoose.Schema({
   id: {
     type: Number,
     unique: true
   },
-  nombre: {
+  title: {
     type: String,
     required: true
   },
-  descripcion: {
-    type: String
-  },
-  precio: {
+  price: {
     type: Number,
     required: true
   },
-  imagen: {
+  description: {
     type: String
   },
-  categoria: {
+  category: {
+    type: String
+  },
+  image: {
     type: String
   }
 });
