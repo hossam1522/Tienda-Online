@@ -52,6 +52,20 @@
             height: 100%;
             object-fit: contain;
         }
+        .cart-image-container {
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .cart-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+          }
     </style>
 
 </head>
@@ -90,7 +104,7 @@
                   <a class="nav-link {% if not session.cart or session.cart.length == 0 %}disabled{% endif %}" href="/carrito">
                       <i class="fas fa-shopping-cart"></i> Carrito
                       <span class="badge badge-pill badge-primary" id="cart-count">
-                        {% if session.cart %}{{ session.cart.length }}{% else %}0{% endif %}
+                          {% if session.cart %}{{ session.cart.length }}{% else %}0{% endif %}
                       </span>
                   </a>
               </li>
@@ -98,25 +112,53 @@
         </div>
     </nav>
 
-    <!-- Sección de categorías -->
     <div class="container mt-4">
-      <h2>Categorías</h2>
-      <div class="row">
-        {% for category in categories %}
-          <div class="col-md-4 mb-4">
-            <div class="card h-100">
-              <div class="image-container">
-                <img src="{{ category.image }}" class="card-img-top" alt="{{ category.name }}">
-              </div>
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ category.name | capitalize }}</h5>
-                <a href="/categorias/{{ category.name | urlencode }}" class="btn btn-custom mt-auto">Ver Productos</a>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
+      <h2>Carrito de Compras</h2>
+      {% if cart and cart.length > 0 %}
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>Imagen</th>
+                      <th>Producto</th>
+                      <th>Precio</th>
+                      <th>Cantidad</th>
+                      <th>Total</th>
+                      <th>Acciones</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for item in cart %}
+                  <tr>
+                      <td>
+                        <div class="cart-image-container">
+                          <img src="{{ item.image }}" alt="{{ item.title }}" class="cart-image">
+                        </div>
+                      </td>
+                      <td><a href="/productos/{{ item.id }}">{{ item.title }}</a></td>
+                      <td>${{ item.price }}</td>
+                      <td>
+                          <form action="/update-cart" method="POST" class="form-inline">
+                              <input type="hidden" name="productId" value="{{ item.id }}">
+                              <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm" style="width: 60px;">
+                              <button type="submit" class="btn btn-sm btn-secondary ml-2">Actualizar</button>
+                          </form>
+                      </td>
+                      <td>${{ (item.price * item.quantity) | round(2) }}</td>
+                      <td>
+                          <form action="/remove-from-cart" method="POST">
+                              <input type="hidden" name="productId" value="{{ item.id }}">
+                              <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                          </form>
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+          <p class="text-right"><strong>Total: ${{ totalPrice }}</strong></p>
+      {% else %}
+          <p>Tu carrito está vacío.</p>
+      {% endif %}
+  </div>
 
 
 
