@@ -1,171 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda</title>
-    <!-- Enlazamos Bootstrap desde CDN -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .navbar {
-            background-color: #4CAF50;
-        }
-        .navbar .navbar-brand {
-            color: white;
-        }
-        .navbar-nav .nav-link {
-            color: white;
-        }
-        .dropdown-menu {
-            background-color: #4CAF50;
-        }
-        .dropdown-menu .dropdown-item {
-            color: white;
-        }
-        .dropdown-menu .dropdown-item:hover {
-            background-color: #45a049;
-        }
-        .card {
-            margin-bottom: 20px;
-        }
-        .card-title {
-            font-weight: bold;
-            flex-grow: 1;
-        }
-        .btn-custom {
-            background-color: #4CAF50;
-            color: white;
-            margin-top: auto;
-        }
-        .card-body {
-            display: flex;
-            flex-direction: column;
-        }
-        .image-container {
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-        }
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .cart-image-container {
-            width: 100px;
-            height: 100px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
+{% extends "base.njk" %}
 
-          .cart-image {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-          }
-    </style>
+{% block title %}Carrito de Compras{% endblock %}
 
-</head>
-<body>
+{% block additional_styles %}
+    .card {
+        margin-bottom: 20px;
+    }
+    .card-title {
+        font-weight: bold;
+        flex-grow: 1;
+    }
+    .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+    .image-container {
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+    }
+    .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    .cart-image-container {
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cart-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+{% endblock %}
 
-    <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="/">Store</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <form class="form-inline" action="/search" method="GET">
-                    <input class="form-control mr-sm-2" type="search" name="q" placeholder="Buscar productos..." aria-label="Search">
-                    <button class="btn btn-custom" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-                
-                </li>
-                <!-- Menú desplegable de categorías -->
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
-                    Categorías
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {% for category in categories %}
-                      <a class="dropdown-item" href="/categorias/{{ category.name | urlencode }}">{{ category.name | capitalize }}</a>
-                    {% endfor %}
+{% block content %}
+<h2>Carrito de Compras</h2>
+{% if cart and cart.length > 0 %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+            <tr>
+                <td>
+                  <div class="cart-image-container">
+                    <img src="{{ item.image }}" alt="{{ item.title }}" class="cart-image">
                   </div>
-                </li>
-
-                <li class="nav-item">
-                  <a class="nav-link {% if not session.cart or session.cart.length == 0 %}disabled{% endif %}" href="/carrito">
-                      <i class="fas fa-shopping-cart"></i> Carrito
-                      <span class="badge badge-pill badge-primary" id="cart-count">
-                          {% if session.cart %}{{ session.cart.length }}{% else %}0{% endif %}
-                      </span>
-                  </a>
-              </li>
-            </ul>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-      <h2>Carrito de Compras</h2>
-      {% if cart and cart.length > 0 %}
-          <table class="table">
-              <thead>
-                  <tr>
-                      <th>Imagen</th>
-                      <th>Producto</th>
-                      <th>Precio</th>
-                      <th>Cantidad</th>
-                      <th>Total</th>
-                      <th>Acciones</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for item in cart %}
-                  <tr>
-                      <td>
-                        <div class="cart-image-container">
-                          <img src="{{ item.image }}" alt="{{ item.title }}" class="cart-image">
-                        </div>
-                      </td>
-                      <td><a href="/productos/{{ item.id }}">{{ item.title }}</a></td>
-                      <td>${{ item.price }}</td>
-                      <td>
-                          <form action="/update-cart" method="POST" class="form-inline">
-                              <input type="hidden" name="productId" value="{{ item.id }}">
-                              <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm" style="width: 60px;">
-                              <button type="submit" class="btn btn-sm btn-secondary ml-2">Actualizar</button>
-                          </form>
-                      </td>
-                      <td>${{ (item.price * item.quantity) | round(2) }}</td>
-                      <td>
-                          <form action="/remove-from-cart" method="POST">
-                              <input type="hidden" name="productId" value="{{ item.id }}">
-                              <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-                          </form>
-                      </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>
-          <p class="text-right"><strong>Total: ${{ totalPrice }}</strong></p>
-      {% else %}
-          <p>Tu carrito está vacío.</p>
-      {% endif %}
-  </div>
-
-
-
-    <!-- Scripts de Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-</body>
-</html>
+                </td>
+                <td><a href="/productos/{{ item.id }}">{{ item.title }}</a></td>
+                <td>${{ item.price }}</td>
+                <td>
+                    <form action="/update-cart" method="POST" class="form-inline">
+                        <input type="hidden" name="productId" value="{{ item.id }}">
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm" style="width: 60px;">
+                        <button type="submit" class="btn btn-sm btn-secondary ml-2">Actualizar</button>
+                    </form>
+                </td>
+                <td>${{ (item.price * item.quantity) | round(2) }}</td>
+                <td>
+                    <form action="/remove-from-cart" method="POST">
+                        <input type="hidden" name="productId" value="{{ item.id }}">
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p class="text-right"><strong>Total: ${{ totalPrice }}</strong></p>
+{% else %}
+    <p>Tu carrito está vacío.</p>
+{% endif %}
+{% endblock %}

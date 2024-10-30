@@ -1,129 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda</title>
-    <!-- Enlazamos Bootstrap desde CDN -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .navbar {
-            background-color: #4CAF50;
-        }
-        .navbar .navbar-brand {
-            color: white;
-        }
-        .navbar-nav .nav-link {
-            color: white;
-        }
-        .dropdown-menu {
-            background-color: #4CAF50;
-        }
-        .dropdown-menu .dropdown-item {
-            color: white;
-        }
-        .dropdown-menu .dropdown-item:hover {
-            background-color: #45a049;
-        }
-        .card {
-            margin-bottom: 20px;
-        }
-        .card-title {
-            font-weight: bold;
-            flex-grow: 1;
-        }
-        .btn-custom {
-            background-color: #4CAF50;
-            color: white;
-            margin-top: auto;
-        }
-        .card-body {
-            display: flex;
-            flex-direction: column;
-        }
-        .image-container {
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-        }
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-    </style>
+{% extends "base.njk" %}
 
-</head>
-<body>
+{% block title %}Categorías - Tienda{% endblock %}
 
-    <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="/">Store</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <form class="form-inline" action="/search" method="GET">
-                    <input class="form-control mr-sm-2" type="search" name="q" placeholder="Buscar productos..." aria-label="Search">
-                    <button class="btn btn-custom" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-                
-                </li>
-                <!-- Menú desplegable de categorías -->
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
-                    Categorías
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {% for category in categories %}
-                      <a class="dropdown-item" href="/categorias/{{ category.name | urlencode }}">{{ category.name | capitalize }}</a>
-                    {% endfor %}
-                  </div>
-                </li>
+{% block additional_styles %}
+    .card {
+        margin-bottom: 20px;
+    }
+    .card-title {
+        font-weight: bold;
+        flex-grow: 1;
+    }
+    .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+    .image-container {
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+    }
+    .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+{% endblock %}
 
-                <li class="nav-item">
-                  <a class="nav-link {% if not session.cart or session.cart.length == 0 %}disabled{% endif %}" href="/carrito">
-                      <i class="fas fa-shopping-cart"></i> Carrito
-                      <span class="badge badge-pill badge-primary" id="cart-count">
-                        {% if session.cart %}{{ session.cart.length }}{% else %}0{% endif %}
-                      </span>
-                  </a>
-              </li>
-            </ul>
+{% block content %}
+<h2>Categorías</h2>
+<div class="row">
+  {% for category in categories %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+        <div class="image-container">
+          <img src="{{ category.image }}" class="card-img-top" alt="{{ category.name }}">
         </div>
-    </nav>
-
-    <!-- Sección de categorías -->
-    <div class="container mt-4">
-      <h2>Categorías</h2>
-      <div class="row">
-        {% for category in categories %}
-          <div class="col-md-4 mb-4">
-            <div class="card h-100">
-              <div class="image-container">
-                <img src="{{ category.image }}" class="card-img-top" alt="{{ category.name }}">
-              </div>
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ category.name | capitalize }}</h5>
-                <a href="/categorias/{{ category.name | urlencode }}" class="btn btn-custom mt-auto">Ver Productos</a>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ category.name | capitalize }}</h5>
+          <a href="/categorias/{{ category.name | urlencode }}" class="btn btn-custom mt-auto">Ver Productos</a>
+        </div>
       </div>
     </div>
-
-
-
-    <!-- Scripts de Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-</body>
-</html>
+  {% endfor %}
+</div>
+{% endblock %}
