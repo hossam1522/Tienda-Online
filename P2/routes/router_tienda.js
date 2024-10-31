@@ -29,11 +29,11 @@ router.get('/categorias/:category', async (req, res) => {
     // Obtener categorías únicas
     const categories = await Productos.distinct('category');
 
-    // Obtener categorías únicas
+    // Obtener nombre para cada categoría
     const categoryData = await Promise.all(categories.map(async (category) => {
       const product = await Productos.findOne({ category });
       return {
-        name: category
+        name: category,
       };
     }));
 
@@ -177,7 +177,7 @@ router.get('/carrito', async(req, res) => {
   // Obtener categorías únicas
   const categories = await Productos.distinct('category');
 
-  // Obtener una imagen representativa para cada categoría
+  // Obtener nombre de cada categoría
   const categoryData = await Promise.all(categories.map(async (category) => {
     const product = await Productos.findOne({ category });
     return {
