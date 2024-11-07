@@ -1,0 +1,36 @@
+{% extends "base.njk" %}
+
+{% block title %}Login{% endblock %}
+
+{% block additional_styles %}
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="login-container">
+        <h2 class="text-center mb-4">Iniciar Sesión</h2>
+        <form id="loginForm" action="/login" method="POST">
+            <div class="form-group">
+                <label for="username">Usuario:</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Ingrese su usuario" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese su contraseña" required>
+            </div>
+            <button type="submit" class="btn btn-custom btn-block">Acceder</button>
+        </form>
+    </div>
+{% endblock %}

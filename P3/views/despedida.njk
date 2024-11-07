@@ -1,0 +1,38 @@
+{% extends "base.njk" %}
+
+{% block title %}Despedida{% endblock %}
+
+{% block additional_styles %}
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .goodbye-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .btn-custom {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block nav_items %}
+    <li class="nav-item">
+        <a class="nav-link" href="/login">Iniciar Sesión</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <div class="goodbye-container">
+        <h2>¡Hasta Luego!</h2>
+        <p>Gracias por visitarnos. Esperamos verte pronto.</p>
+        <a href="/login" class="btn btn-custom">Volver a Iniciar Sesión</a>
+    </div>
+{% endblock %}
