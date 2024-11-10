@@ -134,7 +134,13 @@ router.post('/add-to-cart/:productId', async (req, res) => {
       });
     }
     
-    res.redirect('/carrito');
+    // Guarda los cambios en la sesión
+    req.session.save((err) => {
+      if (err) {
+        console.error('Error al guardar la sesión:', err);
+      }
+      res.redirect('/carrito');
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Error del servidor');
@@ -155,7 +161,13 @@ router.post('/update-cart', (req, res) => {
   }
   
   req.session.cart = cart;
-  res.redirect('/carrito');
+  // Guarda los cambios en la sesión
+  req.session.save((err) => {
+    if (err) {
+      console.error('Error al guardar la sesión:', err);
+    }
+    res.redirect('/carrito');
+  });
 });
 
 // Ruta para eliminar del carrito
@@ -169,7 +181,13 @@ router.post('/remove-from-cart', (req, res) => {
   }
   
   req.session.cart = cart;
-  res.redirect('/carrito');
+  // Guarda los cambios en la sesión
+  req.session.save((err) => {
+    if (err) {
+      console.error('Error al guardar la sesión:', err);
+    }
+    res.redirect('/carrito');
+  });
 });
 
 // Ruta para ver el carrito
@@ -187,7 +205,7 @@ router.get('/carrito', async(req, res) => {
 
   const cart = req.session.cart || [];
   const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  const usuario = req.username;
+  const usuario = req.session.user ? req.session.user.username : null;
   res.render('carrito.njk', { 
     cart, 
     totalPrice: totalPrice.toFixed(2),

@@ -3,6 +3,7 @@ import Productos from "../model/productos.js";
 import Usuarios from "../model/usuarios.js";
 const router = express.Router();
 import jwt from "jsonwebtoken"
+import bcrypt from 'bcrypt';
 //const token = jwt.sign({usuario: user.username}, process.env.SECRET_KEY)
 
 // Para mostrar formulario de login
@@ -33,7 +34,8 @@ router.post('/login', async (req, res) => {
     }
 
     // Verificar la contraseña
-    const isValidPassword = password === user.password;
+    // const isValidPassword = password === user.password;
+    const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
       return res.redirect('/login?error=Contraseña incorrecta');
@@ -43,10 +45,12 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, username: user.username },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '24h' }
     );
 
     //console.log('Token generado:', token);
+
+    req.session.user = { username: user.username };
 
     // Establecer cookie y redirigir a la página de bienvenida
     res.cookie("access_token", token, {
@@ -80,6 +84,8 @@ router.get('/welcome', async (req, res) => {
     const categories = await Productos.distinct('category');
     const categoryData = categories.map(category => ({ name: category }));
 
+    req.session.cart = [];
+
     res.render("bienvenida.njk", {
       username: user.username,
       categories: categoryData
@@ -91,9 +97,19 @@ router.get('/welcome', async (req, res) => {
   }
 });
 
-router.get('/logout', (req, res) => {
+/* router.get('/logout', (req, res) => {
   const usuario = req.username 
   res.clearCookie('access_token').render("despedida.njk", {usuario})
-})
+}) */
+
+router.get('/logout', (req, res) => {
+  const usuario = req.session.user ? req.session.user.username : null;
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error al destruir la sesión:', err);
+    }
+    res.clearCookie('access_token').render("despedida.njk", {usuario});
+  });
+});
 
 export default router;

@@ -10,6 +10,7 @@
     "tienda": "node --watch --env-file=.env tienda.js"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "chokidar": "^3.6.0",
     "cookie-parser": "^1.4.7",
     "express": "^4.21.1",

@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import bcrypt from "bcrypt";
 
 console.log("🏁 seed.js ----------------->");
 
@@ -12,6 +13,12 @@ const client = new MongoClient(url);
 // Database Name
 const dbName = "Tienda_online";
 
+// Función para hashear contraseña
+async function hashPassword(password) {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(password, salt);
+}
+
 // Función para insertar datos en una colección
 async function Inserta_datos_en_colección(colección, url) {
   try {
@@ -23,12 +30,20 @@ async function Inserta_datos_en_colección(colección, url) {
 
     if (documentosEnColeccion > 0) {
       return `La colección ${colección} ya tiene ${documentosEnColeccion} documentos. No se insertarán nuevos datos.`;
-      //return;
     }
 
     // Si la colección está vacía, se procede a insertar los datos
     try {
-      const datos = await fetch(url).then((res) => res.json());
+      let datos = await fetch(url).then((res) => res.json());
+
+      // Si la colección es 'usuarios', hashear las contraseñas
+      if (colección === 'usuarios') {
+        datos = await Promise.all(datos.map(async (user) => {
+          user.password = await hashPassword(user.password);
+          user.isPasswordHashed = true; // Añadir un campo para indicar que la contraseña está hasheada
+          return user;
+        }));
+      }
 
       // Insertar datos en la colección
       const result = await productos.insertMany(datos);
@@ -52,7 +67,7 @@ Inserta_datos_en_colección("productos", "https://fakestoreapi.com/products")
     Inserta_datos_en_colección("usuarios", "https://fakestoreapi.com/users"),
   )
   .then((r) => console.log(`Todo bien: ${r}`)) // OK
-  // Cerar conexión
+  // Cerrar conexión
   .finally(() => client.close())
   .catch((err) => console.error("Algo mal: ", err.errorResponse)); // error
 

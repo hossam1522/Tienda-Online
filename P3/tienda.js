@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'))     // directorio public para archivos
 
-app.use(session({
+/* app.use(session({
 	secret: 'my-secret',      // a secret string used to sign the session ID cookie
 	resave: false,            // don't save session if unmodified
 	saveUninitialized: false  // don't create session until something stored
@@ -35,12 +35,18 @@ app.use(session({
 app.use((req, res, next) => {
   res.locals.session = req.session;
   next();
-});
+}); */
+
+app.use(session({
+  secret: 'my-secret',
+  resave: false,
+  saveUninitialized: false
+}));
 
 app.use(cookieParser())
 
 // middleware de
-const autentificación = (req, res, next) => {
+/* const autentificación = (req, res, next) => {
 	const token = req.cookies.access_token;
 	if (token) {
 		const data = jwt.verify(token, process.env.SECRET_KEY);
@@ -49,7 +55,34 @@ const autentificación = (req, res, next) => {
 	next()
 }
 
-app.use(autentificación)
+app.use(autentificación) */
+
+const autentificación = (req, res, next) => {
+  const token = req.cookies.access_token;
+  if (token) {
+    try {
+      const data = jwt.verify(token, process.env.JWT_SECRET);
+      req.session.user = { username: data.username };
+    } catch (error) {
+      console.error('Error al verificar el token:', error);
+    }
+  }
+  next();
+};
+
+app.use(autentificación);
+
+/* app.use((req, res, next) => {
+  res.locals.user = req.session.user;
+  next();
+}); */
+
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  res.locals.user = req.session.user;
+  next();
+});
+
 
 
 // Las demas rutas con código en el directorio routes
