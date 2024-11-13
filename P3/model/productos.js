@@ -7,7 +7,13 @@ const ProductosSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+        return /^[A-Z]/.test(v);
+      },
+      message: props => `${props.value} debe comenzar con una letra mayúscula!`
+    }
   },
   price: {
     type: Number,

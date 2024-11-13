@@ -90,11 +90,11 @@ router.post('/update-product/:productId', async (req, res) => {
     const { productId } = req.params;
     const { title, price } = req.body;
 
-    // Actualizar el producto
+    // Actualizar el producto con validaciones
     const updatedProduct = await Productos.findByIdAndUpdate(
       productId,
       { title, price: parseFloat(price) },
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!updatedProduct) {
@@ -105,6 +105,14 @@ router.post('/update-product/:productId', async (req, res) => {
     res.redirect(`/productos/${productId}`);
   } catch (err) {
     console.error(err);
+    if (err.name === 'ValidationError') {
+      // Manejar errores de validación
+      let errorMessages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).render('error.njk', { 
+        errors: errorMessages,
+        title: 'Error de Validación'
+      });
+    }
     res.status(500).send('Error del servidor');
   }
 });
