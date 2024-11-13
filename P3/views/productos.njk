@@ -40,9 +40,26 @@
             <p><strong>Precio:</strong> ${{ product.price }}</p>
             <p><strong>Categoría:</strong> {{ product.category | capitalize }}</p>
             <p><strong>Descripción:</strong> {{ product.description }}</p>
-            <form action="/add-to-cart/{{ product._id }}" method="POST">
-              <button type="submit" class="btn btn-custom">Añadir al Carrito</button>
-            </form>
+            
+            {% if user and user.admin %}
+                <!-- Formulario para administradores -->
+                <form action="/update-product/{{ product._id }}" method="POST">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Nuevo título:</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ product.title }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Nuevo precio:</label>
+                        <input type="number" class="form-control" id="price" name="price" value="{{ product.price }}" step="0.01">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar Producto</button>
+                </form>
+            {% else %}
+                <!-- Botón para usuarios normales -->
+                <form action="/add-to-cart/{{ product._id }}" method="POST">
+                    <button type="submit" class="btn btn-custom">Añadir al Carrito</button>
+                </form>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

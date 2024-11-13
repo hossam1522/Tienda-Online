@@ -79,7 +79,7 @@ app.use(autentificación);
 
 app.use((req, res, next) => {
   res.locals.session = req.session;
-  res.locals.user = req.session.user;
+  res.locals.user = req.session.user || null;
   next();
 });
 

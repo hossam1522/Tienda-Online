@@ -64,11 +64,45 @@ router.get('/productos/:productId', async (req, res) => {
       return res.status(404).send('Producto no encontrado');
     }
 
+    // Obtener información del usuario de la sesión
+    const user = req.session.user || null;
+
     res.render('productos.njk', {
       product,
       categories: categoryData,
-      title: `${product.title} - Store`
+      title: `${product.title} - Store`,
+      user
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error del servidor');
+  }
+});
+
+// Ruta para actualizar un producto (solo para administradores)
+router.post('/update-product/:productId', async (req, res) => {
+  try {
+    // Verificar si el usuario es administrador
+    if (!req.session.user || !req.session.user.admin) {
+      return res.status(403).send('Acceso denegado');
+    }
+
+    const { productId } = req.params;
+    const { title, price } = req.body;
+
+    // Actualizar el producto
+    const updatedProduct = await Productos.findByIdAndUpdate(
+      productId,
+      { title, price: parseFloat(price) },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).send('Producto no encontrado');
+    }
+
+    // Redirigir de vuelta a la página del producto
+    res.redirect(`/productos/${productId}`);
   } catch (err) {
     console.error(err);
     res.status(500).send('Error del servidor');
