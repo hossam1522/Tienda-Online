@@ -62,7 +62,7 @@ const autentificación = (req, res, next) => {
   if (token) {
     try {
       const data = jwt.verify(token, process.env.JWT_SECRET);
-      req.session.user = { username: data.username };
+      req.session.user = { username: data.username, admin: data.admin };
     } catch (error) {
       console.error('Error al verificar el token:', error);
     }
