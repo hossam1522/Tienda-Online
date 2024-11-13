@@ -42,7 +42,12 @@ const UserSchema = new mongoose.Schema({
       long: String
     }
   },
-  phone: String
+  phone: String,
+  admin: {
+    type: Boolean,
+    default: false,
+    required: false
+  }
 });
 
 const User = mongoose.model("usuarios", UserSchema);
