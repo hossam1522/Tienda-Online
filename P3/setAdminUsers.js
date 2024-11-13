@@ -12,7 +12,7 @@ const client = new MongoClient(url);
 // Database Name
 const dbName = "Tienda_online";
 
-// Función para establecer usuarios como administradores
+// Función para establecer usuarios como administradores y no administradores
 async function setAdminUsers(adminUserIds) {
   try {
     await client.connect();
@@ -21,14 +21,22 @@ async function setAdminUsers(adminUserIds) {
     const database = client.db(dbName);
     const usuarios = database.collection("usuarios");
 
-    // Actualizar usuarios
-    const result = await usuarios.updateMany(
+    // Actualizar usuarios especificados como administradores
+    const resultAdmin = await usuarios.updateMany(
       { id: { $in: adminUserIds } },
       { $set: { admin: true } }
     );
 
-    console.log(`${result.modifiedCount} usuarios actualizados como administradores.`);
-    return `${result.modifiedCount} usuarios actualizados como administradores.`;
+    // Actualizar el resto de usuarios como no administradores
+    const resultNonAdmin = await usuarios.updateMany(
+      { id: { $nin: adminUserIds } },
+      { $set: { admin: false } }
+    );
+
+    console.log(`${resultAdmin.modifiedCount} usuarios actualizados como administradores.`);
+    console.log(`${resultNonAdmin.modifiedCount} usuarios actualizados como no administradores.`);
+    
+    return `${resultAdmin.modifiedCount} usuarios actualizados como administradores, ${resultNonAdmin.modifiedCount} como no administradores.`;
   } catch (err) {
     console.error("Error al actualizar usuarios:", err);
     throw err;
