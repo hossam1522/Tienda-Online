@@ -17,7 +17,7 @@ router.get('/api/ratings', async (req, res) => {
 // Obtener el rating de un producto específico
 router.get('/api/ratings/:id', async (req, res) => {
   try {
-    const product = await Productos.findOne({ id: req.params.id }, 'id title rating');
+    const product = await Productos.findOne({ _id: req.params.id }, '_id title rating');
     if (!product) {
       return res.status(404).send('Producto no encontrado');
     }
