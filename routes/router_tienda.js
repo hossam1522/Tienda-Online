@@ -1,10 +1,13 @@
 import express from "express";
 import Productos from "../model/productos.js";
+import logger from "../logger.js";
 const router = express.Router();
    
 // Ruta para la página principal
 router.get('/', async (req, res) => {
   try {
+    logger.info('Solicitud GET a /');
+
     // Obtener categorías únicas
     const categories = await Productos.distinct('category');
 
@@ -19,6 +22,7 @@ router.get('/', async (req, res) => {
 
     res.render('index.njk', { categories: categoryData });
   } catch (err) {
+    logger.error('Error al procesar la solicitud GET a /', err);
     console.error(err);
     res.status(500).send('Error del servidor');
   }
@@ -26,6 +30,8 @@ router.get('/', async (req, res) => {
 
 router.get('/categorias/:category', async (req, res) => {
   try {
+    logger.info('Solicitud GET a /categorias/' + req.params.category);
+
     // Obtener categorías únicas
     const categories = await Productos.distinct('category');
 
@@ -41,6 +47,7 @@ router.get('/categorias/:category', async (req, res) => {
     const products = await Productos.find({ category });
     res.render('category.njk', { category, products, categories: categoryData });
   } catch (err) {
+    logger.error('Error al procesar la solicitud GET a /categorias/' + req.params.category, err);
     console.error(err);
     res.status(500).send('Error del servidor');
   }
@@ -49,6 +56,7 @@ router.get('/categorias/:category', async (req, res) => {
 // Ruta para mostrar los productos
 router.get('/productos/:productId', async (req, res) => {
   try {
+    logger.info('Solicitud GET a /productos/' + req.params.productId);
     const categories = await Productos.distinct('category');
     const categoryData = await Promise.all(categories.map(async (category) => {
       const product = await Productos.findOne({ category });
@@ -74,6 +82,7 @@ router.get('/productos/:productId', async (req, res) => {
       user
     });
   } catch (err) {
+    logger.error('Error al procesar la solicitud GET a /productos/' + req.params.productId, err);
     console.error(err);
     res.status(500).send('Error del servidor');
   }
@@ -82,6 +91,7 @@ router.get('/productos/:productId', async (req, res) => {
 // Ruta para actualizar un producto (solo para administradores)
 router.post('/update-product/:productId', async (req, res) => {
   try {
+    logger.info('Solicitud POST a /update-product/' + req.params.productId);
     // Verificar si el usuario es administrador
     if (!req.session.user || !req.session.user.admin) {
       return res.status(403).send('Acceso denegado');
@@ -104,6 +114,7 @@ router.post('/update-product/:productId', async (req, res) => {
     // Redirigir de vuelta a la página del producto
     res.redirect(`/productos/${productId}`);
   } catch (err) {
+    logger.error('Error al procesar la solicitud POST a /update-product/' + req.params.productId, err);
     console.error(err);
     if (err.name === 'ValidationError') {
       // Manejar errores de validación
@@ -120,6 +131,7 @@ router.post('/update-product/:productId', async (req, res) => {
 // Ruta para la búsqueda
 router.get('/search', async (req, res) => {
   try {
+    logger.info('Solicitud GET a /search');
     const searchTerm = req.query.q;
     const categories = await Productos.distinct('category');
     const categoryData = await Promise.all(categories.map(async (category) => {
@@ -144,6 +156,7 @@ router.get('/search', async (req, res) => {
       title: `Resultados de búsqueda para "${searchTerm}"`
     });
   } catch (err) {
+    logger.error('Error al procesar la solicitud GET a /search', err);
     console.error(err);
     res.status(500).send('Error del servidor');
   }
@@ -152,6 +165,7 @@ router.get('/search', async (req, res) => {
 // Ruta para añadir al carrito
 router.post('/add-to-cart/:productId', async (req, res) => {
   try {
+    logger.info('Solicitud POST a /add-to-cart/' + req.params.productId);
     const productId = req.params.productId;
     const product = await Productos.findById(productId);
     if (!product) {
@@ -184,6 +198,7 @@ router.post('/add-to-cart/:productId', async (req, res) => {
       res.redirect('/carrito');
     });
   } catch (err) {
+    logger.error('Error al procesar la solicitud POST a /add-to-cart/' + req.params.productId, err);
     console.error(err);
     res.status(500).send('Error del servidor');
   }
@@ -191,6 +206,7 @@ router.post('/add-to-cart/:productId', async (req, res) => {
 
 // Ruta para actualizar cantidad en el carrito
 router.post('/update-cart', (req, res) => {
+  logger.info('Solicitud POST a /update-cart');
   const { productId, quantity } = req.body;
   const cart = req.session.cart || [];
   const productIndex = cart.findIndex(item => item.id === productId);
@@ -214,6 +230,7 @@ router.post('/update-cart', (req, res) => {
 
 // Ruta para eliminar del carrito
 router.post('/remove-from-cart', (req, res) => {
+  logger.info('Solicitud POST a /remove-from-cart');
   const { productId } = req.body;
   const cart = req.session.cart || [];
   const productIndex = cart.findIndex(item => item.id === productId);
@@ -234,6 +251,7 @@ router.post('/remove-from-cart', (req, res) => {
 
 // Ruta para ver el carrito
 router.get('/carrito', async(req, res) => {
+  logger.info('Solicitud GET a /carrito');
   // Obtener categorías únicas
   const categories = await Productos.distinct('category');
 

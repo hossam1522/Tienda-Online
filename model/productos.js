@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
  
 const ProductosSchema = new mongoose.Schema({
+  _id:{
+    type: mongoose.Schema.Types.ObjectId,
+    auto: true
+  },
   id: {
     type: Number,
     unique: true

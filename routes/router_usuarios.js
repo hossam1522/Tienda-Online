@@ -4,10 +4,12 @@ import Usuarios from "../model/usuarios.js";
 const router = express.Router();
 import jwt from "jsonwebtoken"
 import bcrypt from 'bcrypt';
+import logger from "../logger.js";
 //const token = jwt.sign({usuario: user.username}, process.env.SECRET_KEY)
 
 // Para mostrar formulario de login
 router.get('/login', async(req, res)=>{
+  logger.info('Solicitud GET a /login');
   // Obtener categorías únicas
   const categories = await Productos.distinct('category');
 
@@ -25,6 +27,8 @@ router.get('/login', async(req, res)=>{
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
+
+    logger.info(`Solicitud POST a /login con usuario ${username}`);
 
     // Buscar el usuario en la base de datos
     const user = await Usuarios.findOne({ username });
@@ -59,6 +63,7 @@ router.post('/login', async (req, res) => {
     }).redirect('/welcome');
 
   } catch (error) {
+    logger.error('Error al procesar la solicitud POST a /login:', error);
     console.error('Error en el proceso de login:', error);
     res.status(500).send('Error interno del servidor');
   }
@@ -67,6 +72,7 @@ router.post('/login', async (req, res) => {
 // Ruta para la página de bienvenida
 router.get('/welcome', async (req, res) => {
   try {
+    logger.info('Solicitud GET a /welcome');
     // Verificar el token de la cookie
     const token = req.cookies.access_token;
     if (!token) {
@@ -91,6 +97,7 @@ router.get('/welcome', async (req, res) => {
       categories: categoryData
     });
   } catch (error) {
+    logger.error('Error al procesar la solicitud GET a /welcome:', error);
     console.error('Error al cargar la página de bienvenida:', error);
     res.clearCookie("access_token");
     res.redirect('/login');
@@ -104,6 +111,7 @@ router.get('/welcome', async (req, res) => {
 
 router.get('/logout', (req, res) => {
   const usuario = req.session.user ? req.session.user.username : null;
+  logger.info(`Solicitud GET a /logout de ${usuario}`);
   req.session.destroy((err) => {
     if (err) {
       console.error('Error al destruir la sesión:', err);
