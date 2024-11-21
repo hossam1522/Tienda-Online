@@ -3,10 +3,18 @@ import Productos from "../model/productos.js";
 
 const router = express.Router();
 
-// Obtener todos los ratings
+// Obtener todos los ratings con paginación
 router.get('/api/ratings', async (req, res) => {
+  const { desde = 0, hasta } = req.query; // 'hasta' puede ser indefinido
   try {
-    const products = await Productos.find({}, 'id title rating'); // Solo obtener id, title y rating
+    const query = Productos.find({}, 'id title rating').skip(Number(desde)); // Salta los primeros 'desde' productos
+
+    // Si 'hasta' está definido, aplica limit
+    if (hasta) {
+      query.limit(Number(hasta)+1); // Limita a 'hasta' productos
+    }
+
+    const products = await query; // Ejecuta la consulta
     res.json(products);
   } catch (err) {
     console.error(err);

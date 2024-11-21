@@ -3,3 +3,6 @@ GET http://localhost:8000/api/ratings/
 
 ### Obtener el rating de un producto específico
 GET http://localhost:8000/api/ratings/67102f4edfcd7015a43fde50
+
+### Obtener ratings del 0 al 5
+GET http://localhost:8000/api/ratings/?desde=0&hasta=4
