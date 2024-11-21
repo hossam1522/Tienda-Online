@@ -88,8 +88,10 @@ app.use((req, res, next) => {
 // Las demas rutas con código en el directorio routes
 import TiendaRouter from "./routes/router_tienda.js"
 import UsuariosRouter from "./routes/router_usuarios.js"
+import ApiRouter from "./routes/router_api.js";
 app.use("/", TiendaRouter);
 app.use("/", UsuariosRouter);
+app.use("/", ApiRouter);
 
 
 const PORT = process.env.PORT || 8000;
