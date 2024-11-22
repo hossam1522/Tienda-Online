@@ -47,7 +47,7 @@ router.put('/api/ratings/:id', async (req, res) => {
   try {
     logger.info(`Solicitud PUT a /api/ratings/${req.params.id}`);
     const product = await Productos.findOneAndUpdate(
-      { id: req.params.id },
+      { _id: req.params.id },
       { rating: { rate, count } },
       { new: true, runValidators: true }
     );
