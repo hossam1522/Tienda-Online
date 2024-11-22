@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
  
 const ProductosSchema = new mongoose.Schema({
+  _id:{
+    type: mongoose.Schema.Types.ObjectId,
+    auto: true
+  },
   id: {
     type: Number,
     unique: true
@@ -27,6 +31,19 @@ const ProductosSchema = new mongoose.Schema({
   },
   image: {
     type: String
+  },
+  rating: {
+    rate: {
+      type: Number,
+      required: true,
+      min: 0, // Valor mínimo
+      max: 5  // Valor máximo
+    },
+    count: {
+      type: Number,
+      required: true,
+      default: 0 // Valor por defecto
+    }
   }
 });
 

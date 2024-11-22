@@ -3,11 +3,19 @@ import nunjucks  from "nunjucks"
 import session from "express-session"
 import cookieParser from "cookie-parser"
 import jwt from "jsonwebtoken"
+import morgan from "morgan";
+import logger from "./logger.js";
       
 import connectDB from "./model/db.js"
 connectDB()
 
 const app = express()
+
+app.use(morgan('combined', {
+  stream: {
+    write: (message) => logger.info(message.trim()), // Log de información
+  },
+}));
 
 const IN = process.env.IN || 'development'
 
@@ -71,6 +79,7 @@ const autentificación = (req, res, next) => {
 };
 
 app.use(autentificación);
+app.use(express.json())
 
 /* app.use((req, res, next) => {
   res.locals.user = req.session.user;
@@ -88,8 +97,10 @@ app.use((req, res, next) => {
 // Las demas rutas con código en el directorio routes
 import TiendaRouter from "./routes/router_tienda.js"
 import UsuariosRouter from "./routes/router_usuarios.js"
+import ApiRouter from "./routes/router_api.js";
 app.use("/", TiendaRouter);
 app.use("/", UsuariosRouter);
+app.use("/", ApiRouter);
 
 
 const PORT = process.env.PORT || 8000;
