@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Función para renderizar las estrellas
 function renderStars(ele, rate, count) {
   let html_nuevo_con_las_estrellas = '';
+  html_nuevo_con_las_estrellas += `${rate.toFixed(2)} `; // Añadir el rating con 2 decimales
   for (let i = 1; i <= 5; i++) {
     if (i <= rate) {
       html_nuevo_con_las_estrellas += `<span class="star" data-star="${i}">★</span>`; // Estrella llena

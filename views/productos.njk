@@ -58,7 +58,7 @@
             <p><strong>Precio:</strong> ${{ product.price }}</p>
             <p><strong>Categoría:</strong> {{ product.category | capitalize }}</p>
             <p><strong>Descripción:</strong> {{ product.description }}</p>
-            {{ product.rating.rate }} <span class="stars" data-_id="{{product._id}}"></span>
+            <span class="stars" data-_id="{{product._id}}"></span>
             
             {% if user and user.admin %}
                 <!-- Formulario para administradores -->
