@@ -54,9 +54,23 @@ function renderStars(ele, rate, count) {
 
 // Función para manejar la votación
 function Vota(evt) {
-  const ide = evt.currentTarget.parentNode.dataset._id;      // producto (en atributos del dataset)
-  const pun = evt.target.dataset.star;     // estrella no (en atributos del dataset)
-  
+  const ide = evt.target.parentNode.dataset._id; // ID del producto
+  const pun = evt.target.dataset.star; // Estrella seleccionada
+
+  // Obtener el userId de localStorage
+  const userId = localStorage.getItem('userId');
+
+  if (!userId) {
+    alert('Debes iniciar sesión para votar.');
+    return; // Salir si no hay usuario
+  }
+
+  // Verificar si el usuario ya ha votado
+  if (localStorage.getItem(`voted_${userId}_${ide}`)) {
+    alert('Ya has votado por este producto en esta sesión.');
+    return; // Salir si ya ha votado
+  }
+
   // Hacer el fetch para actualizar el rating en la base de datos
   fetch(`/api/ratings/${ide}`, {
     method: 'PUT',
@@ -65,7 +79,6 @@ function Vota(evt) {
     },
     body: JSON.stringify({
       rate: parseInt(pun), // Convertir la estrella seleccionada a número
-      count: 1 // Aquí puedes ajustar cómo manejar el conteo de votos
     })
   })
   .then(response => {
@@ -77,7 +90,12 @@ function Vota(evt) {
   .then(data => {
     // Actualizar las estrellas y el número de votos con la respuesta
     const { rate, count } = data.rating;
-    renderStars(evt.currentTarget.parentNode, rate, count); // Actualiza el elemento de votación
+    renderStars(evt.target.parentNode, rate, count); // Actualiza el elemento de votación
+
+    // Marcar que el usuario ha votado
+    console.log('Voto registrado correctamente. Guardando estado en localStorage...');
+    localStorage.setItem(`voted_${userId}_${ide}`, 'true'); // Guardar en localStorage
+    
   })
   .catch(error => {
     console.error('Error al enviar la calificación:', error);
