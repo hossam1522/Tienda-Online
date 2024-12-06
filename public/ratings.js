@@ -65,6 +65,8 @@ function renderStars(ele, rate, count, hasVoted=false) {
 
 // Función para manejar la votación
 function Vota(evt) {
+  evt.preventDefault(); // Evitar el comportamiento predeterminado del evento
+
   const ide = evt.target.parentNode.dataset._id; // ID del producto
   const pun = evt.target.dataset.star; // Estrella seleccionada
 
@@ -82,6 +84,27 @@ function Vota(evt) {
     return; // Salir si ya ha votado
   }
 
+  // Guardar el estado anterior para revertir en caso de error
+  const previousState = {
+    rate: parseInt(evt.target.parentNode.dataset.currentRate), // Estado actual
+    count: parseInt(evt.target.parentNode.dataset.currentCount) // Conteo actual
+  };
+
+  // Actualizar la interfaz de usuario inmediatamente
+  const newRate = parseInt(pun);
+  const newCount = previousState.count + 1; // Incrementar el conteo
+  const updatedRate = ((previousState.rate * previousState.count) + newRate) / newCount; // Calcular el nuevo rating promedio
+  const roundedRate = Math.round(updatedRate * 100) / 100; // Redondear a 2 decimales
+
+  // Actualizar la visualización de las estrellas
+  const ele = evt.target.parentNode; // Obtener el elemento padre
+  if (ele) {
+    renderStars(ele, roundedRate, newCount, true); // Actualiza la visualización
+  } else {
+    console.error('Elemento no encontrado para actualizar las estrellas.');
+    return; // Salir si el elemento no existe
+  }
+
   // Hacer el fetch para actualizar el rating en la base de datos
   fetch(`/api/ratings/${ide}`, {
     method: 'PUT',
@@ -89,7 +112,7 @@ function Vota(evt) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      rate: parseInt(pun), // Convertir la estrella seleccionada a número
+      rate: newRate, // Convertir la estrella seleccionada a número
     })
   })
   .then(response => {
@@ -104,12 +127,13 @@ function Vota(evt) {
     localStorage.setItem(`voted_${userId}_${ide}`, 'true'); // Guardar en localStorage
     
     const { rate, count } = data.rating;
-    const hasVoted = localStorage.getItem(`voted_${userId}_${ide}`); // Verificar si el usuario ha vot
-    renderStars(evt.target.parentNode, rate, count, hasVoted); // Actualiza el elemento de votación
-
-    // Marcar que el usuario ha votado
+    renderStars(ele, rate, count, true); // Actualiza el elemento de votación
   })
   .catch(error => {
     console.error('Error al enviar la calificación:', error);
+    // Revertir al estado anterior en caso de error
+    if (ele) {
+      renderStars(ele, previousState.rate, previousState.count, false); // Revertir a la visualización anterior
+    }
   });
 }
