@@ -19,8 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Suponiendo que la respuesta tiene la estructura { rating: { rate, count } }
         const { rate, count } = data.rating;
         
+        const userId = localStorage.getItem('userId'); // Obtener el userId de localStorage
+        const hasVoted = localStorage.getItem(`voted_${userId}_${ide}`); // Verificar si el usuario ha votado
         // Crear el HTML para las estrellas
-        renderStars(ele, rate, count);
+        renderStars(ele, rate, count, hasVoted);
         
         // Añadir manejador de eventos para cada estrella
         for (const ele_hijo of ele.children) {
@@ -35,12 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Función para renderizar las estrellas
-function renderStars(ele, rate, count) {
+function renderStars(ele, rate, count, hasVoted=false) {
   let html_nuevo_con_las_estrellas = '';
   html_nuevo_con_las_estrellas += `${rate.toFixed(2)} `; // Añadir el rating con 2 decimales
   for (let i = 1; i <= 5; i++) {
     if (i <= rate) {
-      html_nuevo_con_las_estrellas += `<span class="star" data-star="${i}">★</span>`; // Estrella llena
+      html_nuevo_con_las_estrellas += `<span class="star voted" data-star="${i}">★</span>`; // Estrella llena
     } else {
       html_nuevo_con_las_estrellas += `<span class="star" data-star="${i}">☆</span>`; // Estrella vacía
     }
@@ -51,6 +53,14 @@ function renderStars(ele, rate, count) {
   
   // Actualizar el contenido del elemento
   ele.innerHTML = html_nuevo_con_las_estrellas;
+
+  // Cambiar el color de las estrellas si el usuario ha votado
+  if (hasVoted) {
+    const stars = ele.getElementsByClassName('star');
+    for (const star of stars) {
+      star.style.color = 'gold'; // Cambia el color a dorado si el usuario ha votado
+    }
+  }
 }
 
 // Función para manejar la votación
@@ -90,13 +100,14 @@ function Vota(evt) {
   })
   .then(data => {
     // Actualizar las estrellas y el número de votos con la respuesta
-    const { rate, count } = data.rating;
-    renderStars(evt.target.parentNode, rate, count); // Actualiza el elemento de votación
-
-    // Marcar que el usuario ha votado
     console.log('Voto registrado correctamente. Guardando estado en localStorage...');
     localStorage.setItem(`voted_${userId}_${ide}`, 'true'); // Guardar en localStorage
     
+    const { rate, count } = data.rating;
+    const hasVoted = localStorage.getItem(`voted_${userId}_${ide}`); // Verificar si el usuario ha vot
+    renderStars(evt.target.parentNode, rate, count, hasVoted); // Actualiza el elemento de votación
+
+    // Marcar que el usuario ha votado
   })
   .catch(error => {
     console.error('Error al enviar la calificación:', error);
