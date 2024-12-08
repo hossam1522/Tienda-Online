@@ -43,19 +43,31 @@ router.get('/api/ratings/:id', async (req, res) => {
 
 // Modificar el rating de un producto específico
 router.put('/api/ratings/:id', async (req, res) => {
-  const { rate, count } = req.body; // Asegúrate de que el rating se envíe en el cuerpo de la solicitud
+  const { rate } = req.body; // Solo necesitas el nuevo rating
   try {
     logger.info(`Solicitud PUT a /api/ratings/${req.params.id}`);
-    const product = await Productos.findOneAndUpdate(
-      { _id: req.params.id },
-      { rating: { rate, count } },
-      { new: true, runValidators: true }
-    );
-
+    
+    // Buscar el producto actual
+    const product = await Productos.findOne({ _id: req.params.id });
     if (!product) {
       return res.status(404).send('Producto no encontrado');
     }
-    res.json(product);
+
+    // Sumar el nuevo rating al existente
+    const newCount = product.rating.count + 1; // Incrementar el conteo
+    const newRate = ((product.rating.rate * product.rating.count) + rate) / newCount; // Calcular el nuevo rating promedio
+
+    // Redondear el nuevo rating a 2 decimales
+    const roundedRate = Math.round(newRate * 100) / 100; // Redondear a 2 decimales
+
+    // Actualizar el producto con el nuevo rating y conteo
+    const updatedProduct = await Productos.findOneAndUpdate(
+      { _id: req.params.id },
+      { rating: { rate: roundedRate, count: newCount } },
+      { new: true, runValidators: true }
+    );
+
+    res.json(updatedProduct);
   } catch (err) {
     logger.error(`Error al modificar rating de producto: ${err}`);
     console.error(err);

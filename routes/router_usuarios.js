@@ -55,12 +55,11 @@ router.post('/login', async (req, res) => {
     //console.log('Token generado:', token);
 
     req.session.user = { username: user.username };
-
     // Establecer cookie y redirigir a la página de bienvenida
     res.cookie("access_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production'
-    }).redirect('/welcome');
+    }).redirect(`/welcome?userId=${user._id}`);
 
   } catch (error) {
     logger.error('Error al procesar la solicitud POST a /login:', error);

@@ -31,4 +31,14 @@
         <p>Gracias por iniciar sesión en nuestra plataforma.</p>
         <a href="/" class="btn btn-custom">Ir a la página principal</a>
     </div>
+    <script>
+      // Obtener el userId de la URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const userId = urlParams.get('userId');
+    
+      // Almacenar el userId en localStorage
+      if (userId) {
+        localStorage.setItem('userId', userId);
+      }
+    </script>
 {% endblock %}

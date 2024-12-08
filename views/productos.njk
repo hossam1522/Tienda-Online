@@ -28,6 +28,27 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+    .star {
+      cursor: pointer; /* Cambia el cursor a un puntero al pasar sobre las estrellas */
+    }
+{% endblock %}
+{% block additional_head %}
+    <script src="../ratings.js" defer></script>
+{% endblock %}
+
+{% block additional_nav %}
+    <li class="nav-item">
+        <a class="nav-link" href="/carrito">
+            <i class="fas fa-shopping-cart"></i> Carrito
+            <span class="badge badge-light">{{ cart.length }}</span>
+        </a>
+    </li>
+{% endblock %}
+
+{% block additional_body %}
+    <div class="container mt-3">
+        <h1>{{ product.title }}</h1>
+    </div>
 {% endblock %}
 
 {% block content %}
@@ -40,6 +61,7 @@
             <p><strong>Precio:</strong> ${{ product.price }}</p>
             <p><strong>Categoría:</strong> {{ product.category | capitalize }}</p>
             <p><strong>Descripción:</strong> {{ product.description }}</p>
+            <span class="stars" data-_id="{{product._id}}"></span>
             
             {% if user and user.admin %}
                 <!-- Formulario para administradores -->
