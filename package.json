@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "seed": "node --env-file=.env seed.js",
-    "tienda": "node --watch --env-file=.env tienda.js"
+    "tienda": "node --watch tienda.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
