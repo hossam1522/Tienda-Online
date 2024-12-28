@@ -9,5 +9,5 @@ ENV IN=production
 ENV USER_DB=root
 ENV PASS=example
 ENV SECRET_KEY="EsTa MisMa:i8775tyjk,"
-ENV DB_HOST=172.17.0.1
+ENV DB_HOST=mongo
 CMD npm run tienda
