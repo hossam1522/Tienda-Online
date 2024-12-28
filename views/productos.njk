@@ -33,12 +33,12 @@
     }
 {% endblock %}
 {% block additional_head %}
-    <script src="../ratings.js" defer></script>
+    <script src="/public/ratings.js" defer></script>
 {% endblock %}
 
 {% block additional_nav %}
     <li class="nav-item">
-        <a class="nav-link" href="/carrito">
+        <a class="nav-link" href="carrito">
             <i class="fas fa-shopping-cart"></i> Carrito
             <span class="badge badge-light">{{ cart.length }}</span>
         </a>
@@ -65,7 +65,7 @@
             
             {% if user and user.admin %}
                 <!-- Formulario para administradores -->
-                <form action="/update-product/{{ product._id }}" method="POST">
+                <form action="update-product/{{ product._id }}" method="POST">
                     <div class="mb-3">
                         <label for="title" class="form-label">Nuevo título:</label>
                         <input type="text" class="form-control" id="title" name="title" value="{{ product.title }}">
@@ -78,7 +78,7 @@
                 </form>
             {% else %}
                 <!-- Botón para usuarios normales -->
-                <form action="/add-to-cart/{{ product._id }}" method="POST">
+                <form action="add-to-cart/{{ product._id }}" method="POST">
                     <button type="submit" class="btn btn-custom">Añadir al Carrito</button>
                 </form>
             {% endif %}

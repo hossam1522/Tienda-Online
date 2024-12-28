@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ide = ele.dataset._id;   // _id está en los atributos del dataset
     
     // Hacer el fetch para obtener el rating del producto
-    fetch(`/api/ratings/${ide}`)
+    fetch(`/tienda/api/ratings/${ide}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Error en la respuesta de la API');
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(error => {
         console.error('Error al obtener el rating:', error);
-        ele.innerHTML = 'Rating no disponible'; // Mensaje de error
+        ele.innerHTML = `Rating no disponible: ${ide}`; // Mensaje de error
       });
   }
 });
@@ -106,7 +106,7 @@ function Vota(evt) {
   }
 
   // Hacer el fetch para actualizar el rating en la base de datos
-  fetch(`/api/ratings/${ide}`, {
+  fetch(`/tienda/api/ratings/${ide}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'

@@ -8,6 +8,6 @@ EXPOSE 8000
 ENV IN=production
 ENV USER_DB=root
 ENV PASS=example
-ENV SECRET_KEY="EsTa MisMa:i8775tyjk,"
+ENV JWT_SECRET="EsTa MisMa:i8775tyjk,"
 ENV DB_HOST=mongo
 CMD npm run tienda
