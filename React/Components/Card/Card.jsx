@@ -7,7 +7,7 @@ const Card = ({ product }) => {
       <img src={product.image} alt="product" />
       <h2>{product.title}</h2>
       <p>{product.description.substring(0, 50)}</p>
-      <Link to={`/product/${product.id}`}>
+      <Link to={`product/${product.id}`}>
         <button>Buy now</button>
       </Link>
     </div>

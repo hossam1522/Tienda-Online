@@ -14,14 +14,14 @@ const App = () => {
 
   return (
     <Routes>
-      <Route path="/" element={
+      <Route path="/react/" element={
         <div className="App">
           {data.map((product) => (
             <Card key={product.id} product={product} />
           ))}
         </div>
       } />
-      <Route path="/product/:id" element={<ProductDetail products={data} />} />
+      <Route path="/react/product/:id" element={<ProductDetail products={data} />} />
     </Routes>
   );
 };

@@ -5,8 +5,9 @@ http://localhost {
         file_server browse
     }
 
-    handle_path /* {
-        reverse_proxy react:5173 
+    redir /react /react/
+    handle_path /react/* {
+        reverse_proxy react:4173 
     }
     
     redir /tienda /tienda/
