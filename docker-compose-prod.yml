@@ -8,6 +8,8 @@ services:
 
   react:
     build: ./React
+    depends_on:
+      - caddy
     restart: unless-stopped
     
   mongo:

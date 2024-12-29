@@ -10,4 +10,6 @@ ENV USER_DB=root
 ENV PASS=example
 ENV JWT_SECRET="EsTa MisMa:i8775tyjk,"
 ENV DB_HOST=mongo
-CMD npm run tienda
+COPY entrypoint.sh /app/entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["npm", "run", "tienda"]

@@ -6,7 +6,7 @@
   "main": "seed.js",
   "type": "module",
   "scripts": {
-    "seed": "node --env-file=.env seed.js",
+    "seed": "node seed.js",
     "tienda": "node --watch tienda.js"
   },
   "dependencies": {
