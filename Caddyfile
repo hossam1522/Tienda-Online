@@ -1,0 +1,24 @@
+http://localhost {
+    redir /public /public/
+    handle_path /public/* {
+        root * /usr/share/caddy
+        file_server browse
+    }
+
+    redir /react /react/
+    handle_path /react/* {
+        reverse_proxy react:4173 
+    }
+    
+    redir /tienda /tienda/
+    handle_path /tienda/* {
+        reverse_proxy tienda:8000
+    }
+    
+    root * /usr/share/caddy
+    file_server
+    handle_errors {
+        rewrite * /404.html
+        file_server
+    }
+}

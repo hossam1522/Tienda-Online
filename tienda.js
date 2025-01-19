@@ -17,6 +17,7 @@ app.use(morgan('combined', {
   },
 }));
 
+
 const IN = process.env.IN || 'development'
 
 nunjucks.configure('views', {         // directorio 'views' para las plantillas html
@@ -105,5 +106,5 @@ app.use("/", ApiRouter);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`Servidor ejecutandose en  http://localhost:${PORT}`);
+  console.log(`Servidor ejecutandose en  http://localhost/tienda`);
 })

@@ -1,8 +1,8 @@
 ### Obtener todos los ratings
-GET http://localhost:8000/api/ratings/
+GET http://localhost/tienda/api/ratings/
 
 ### Obtener el rating de un producto específico
-GET http://localhost:8000/api/ratings/67102f4edfcd7015a43fde50
+GET http://localhost/tienda/api/ratings/6752e7672b9f08436bcb1311
 
 ### Obtener ratings del 0 al 5
-GET http://localhost:8000/api/ratings/?desde=0&hasta=4
+GET http://localhost/tienda/api/ratings/?desde=0&hasta=4

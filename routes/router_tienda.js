@@ -2,6 +2,8 @@ import express from "express";
 import Productos from "../model/productos.js";
 import logger from "../logger.js";
 const router = express.Router();
+
+const base = '/tienda/';
    
 // Ruta para la página principal
 router.get('/', async (req, res) => {
@@ -112,7 +114,7 @@ router.post('/update-product/:productId', async (req, res) => {
     }
 
     // Redirigir de vuelta a la página del producto
-    res.redirect(`/productos/${productId}`);
+    res.redirect(`${base}productos/${productId}`);
   } catch (err) {
     logger.error('Error al procesar la solicitud POST a /update-product/' + req.params.productId, err);
     console.error(err);
@@ -195,7 +197,7 @@ router.post('/add-to-cart/:productId', async (req, res) => {
       if (err) {
         console.error('Error al guardar la sesión:', err);
       }
-      res.redirect('/carrito');
+      res.redirect(`${base}carrito`);
     });
   } catch (err) {
     logger.error('Error al procesar la solicitud POST a /add-to-cart/' + req.params.productId, err);
@@ -224,7 +226,7 @@ router.post('/update-cart', (req, res) => {
     if (err) {
       console.error('Error al guardar la sesión:', err);
     }
-    res.redirect('/carrito');
+    res.redirect(`${base}carrito`);
   });
 });
 
@@ -245,7 +247,8 @@ router.post('/remove-from-cart', (req, res) => {
     if (err) {
       console.error('Error al guardar la sesión:', err);
     }
-    res.redirect('/carrito');
+    // Redirigir de vuelta al carrito con base + '/carrito'
+    res.redirect(`${base}carrito`);
   });
 });
 

@@ -6,8 +6,9 @@ console.log("🏁 seed.js ----------------->");
 // del archivo .env
 const USER_DB = process.env.USER_DB;
 const PASS = process.env.PASS;
+const DB_HOST = process.env.DB_HOST;
 
-const url = `mongodb://${USER_DB}:${PASS}@localhost:27017`;
+const url = `mongodb://${USER_DB}:${PASS}@${DB_HOST}:27017`;
 const client = new MongoClient(url);
 
 // Database Name

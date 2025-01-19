@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken"
 import bcrypt from 'bcrypt';
 import logger from "../logger.js";
 //const token = jwt.sign({usuario: user.username}, process.env.SECRET_KEY)
+const base = '/tienda/'
 
 // Para mostrar formulario de login
 router.get('/login', async(req, res)=>{
@@ -34,7 +35,7 @@ router.post('/login', async (req, res) => {
     const user = await Usuarios.findOne({ username });
 
     if (!user) {
-      return res.redirect('/login?error=Usuario no encontrado');
+      return res.redirect(`${base}login?error=Usuario no encontrado`);
     }
 
     // Verificar la contraseña
@@ -42,7 +43,7 @@ router.post('/login', async (req, res) => {
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      return res.redirect('/login?error=Contraseña incorrecta');
+      return res.redirect(`${base}login?error=Contraseña incorrecta`);
     }
 
     // Generar token JWT
@@ -59,7 +60,7 @@ router.post('/login', async (req, res) => {
     res.cookie("access_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production'
-    }).redirect(`/welcome?userId=${user._id}`);
+    }).redirect(`${base}welcome?userId=${user._id}`);
 
   } catch (error) {
     logger.error('Error al procesar la solicitud POST a /login:', error);
@@ -75,14 +76,14 @@ router.get('/welcome', async (req, res) => {
     // Verificar el token de la cookie
     const token = req.cookies.access_token;
     if (!token) {
-      return res.redirect('/login');
+      return res.redirect(`${base}login`);
     }
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     const user = await Usuarios.findById(decodedToken.userId);
 
     if (!user) {
-      return res.redirect('/login');
+      return res.redirect(`${base}login`);
     }
 
     // Obtener categorías para el menú
@@ -99,7 +100,7 @@ router.get('/welcome', async (req, res) => {
     logger.error('Error al procesar la solicitud GET a /welcome:', error);
     console.error('Error al cargar la página de bienvenida:', error);
     res.clearCookie("access_token");
-    res.redirect('/login');
+    res.redirect(`${base}login`);
   }
 });
 
